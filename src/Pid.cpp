@@ -42,10 +42,12 @@ float Pid::update(float measure,float dt)
 	float error_delta = error - error_last_;
 	this->error_sum_ += error * dt;
 	
+	/*
 	if (this->error_sum_>this->max_windup_) 
 		this->error_sum_=this->max_windup_;
 	else if (this->error_sum_<-this->max_windup_) 
 		this->error_sum_=-this->max_windup_;
+	*/
 
 	this->error_last_ = error;
 
@@ -54,6 +56,7 @@ float Pid::update(float measure,float dt)
 	float d = this->Kd_ * ( this->alpha_ * error_delta/dt + (1-this->alpha_) * error);
 
 	float u = p + i + d;
+
 	#ifdef PID_DEBUG
   	Serial.print("Pid::update:");
   	Serial.print("\t");
@@ -62,6 +65,10 @@ float Pid::update(float measure,float dt)
   	Serial.print(measure);
 	Serial.print("\t");
   	Serial.print(p);
+	Serial.print("\t");
+  	Serial.print(i);
+	Serial.print("\t");
+  	Serial.print(d);
 	Serial.print("\t");
   	Serial.print(u);
   	Serial.print("\n");
@@ -74,8 +81,6 @@ void Pid::reset()
 	this->Kp_=0; 	
   	this->Ki_=0; 	
   	this->Kd_=0;
-  	this->max_windup_=0;
-  	this->alpha_=0;	
   	this->target_=0;
   	this->error_sum_=0;	
   	this->error_last_=0;
