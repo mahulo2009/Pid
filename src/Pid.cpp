@@ -41,6 +41,9 @@ float Pid::update(float measure,float dt)
 	float error = this->target_ - measure;
 	float error_delta = error - error_last_;
 	this->error_sum_ += error * dt;
+
+	if (error == 0 && target_ == 0) 
+		this->error_sum_=0;
 	
 	/*
 	if (this->error_sum_>this->max_windup_) 
