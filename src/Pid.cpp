@@ -1,45 +1,45 @@
 #include "Pid.h"
 
 
-Pid::Pid() : error_sum_(0), error_last_(0)
+Pid::Pid() : error_sum_(0), error_last_(0),target_(0)
 {
 }
 
-void Pid::setTarget(float target)
+void Pid::setTarget(double target)
 {
 	this->target_=target;
 }
 
-void Pid::setKp(float Kp)
+void Pid::setKp(double Kp)
 {
 	this->Kp_=Kp;
 }
 
-void Pid::setKi(float Ki)
+void Pid::setKi(double Ki)
 {
 	this->Ki_=Ki;
 }
 
-void Pid::setKd(float Kd)
+void Pid::setKd(double Kd)
 {
 	this->Kd_=Kd;
 }
 
-void Pid::setMaxWindup(float max_windup)
+void Pid::setMaxWindup(double max_windup)
 {
 	this->max_windup_=max_windup;
 }
 
-void Pid::setAlpha(float alpha)
+void Pid::setAlpha(double alpha)
 {
 	this->alpha_=alpha;	
 }
 
 
-float Pid::update(float measure,float dt)
+double Pid::update(double measure,double dt)
 {
-	float error = this->target_ - measure;
-	float error_delta = error - error_last_;
+	double error = this->target_ - measure;
+	double error_delta = error - error_last_;
 	this->error_sum_ += error * dt;
 
 	if (error == 0 && target_ == 0) 
@@ -54,9 +54,10 @@ float Pid::update(float measure,float dt)
 
 	this->error_last_ = error;
 
-	float p = this->Kp_ * error;
-	float i = this->Ki_ * error_sum_;
-	float d = this->Kd_ * ( this->alpha_ * error_delta/dt + (1-this->alpha_) * error);
+	double p = this->Kp_ * error;
+	double i = this->Ki_ * error_sum_;
+	//float d = this->Kd_ * ( this->alpha_ * error_delta/dt + (1-this->alpha_) * error);
+	double d = this->Kd_ *  this->alpha_ * (error_delta/dt);
 
 	float u = p + i + d;
 
